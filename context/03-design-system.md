@@ -14,26 +14,30 @@ templated. Fill in the brand specifics (marked ⟨TBD⟩) once the owner decides
    needed to fulfill the order.
 5. **Clarity over cleverness.** Obvious navigation, readable typography, honest layout.
 
-## Brand ⟨TBD — owner to decide⟩
-- Store name: ⟨TBD⟩
-- Personality: ⟨e.g. modern & minimal / warm & local / premium⟩
-- Logo: ⟨TBD⟩
+## Brand
+- Store name: **ArtHub**
+- Personality: **Warm & local premium** — earthy, tactile, confident, not cold-tech.
+  Decided 2026-07-02 (owner, via Phase 1 kickoff).
+- Logo: ⟨TBD⟩ — interim wordmark is a rounded square "A" mark in `--primary` (see
+  `src/components/site/navbar.tsx`). Replace with real logo asset when available.
 
-## Color (starter tokens — adjust to brand)
-Define as CSS variables / Tailwind theme tokens. Suggested neutral, trustworthy base:
+## Color (implemented in `src/app/globals.css`, shadcn `radix-nova` preset)
+Warm terracotta + gold palette, implemented as OKLCH CSS variables (light + `.dark`):
 
-- `--primary`: a confident brand color ⟨TBD⟩ (used for CTAs, links, active states)
-- `--primary-foreground`: text on primary (usually white)
-- `--background`: near-white (`#FFFFFF` / `#FAFAFA`)
-- `--foreground`: near-black text (`#171717`)
-- `--muted`: subtle backgrounds / dividers (`#F4F4F5`)
-- `--muted-foreground`: secondary text (`#71717A`)
-- `--accent`: highlight for badges/sales
-- `--destructive`: errors, remove actions (red)
-- `--success`: order confirmed / in-stock (green)
-- `--border`: hairline borders (`#E4E4E7`)
+- `--primary`: terracotta (`oklch(0.52 0.14 40)`, light) — CTAs, links, active states
+- `--primary-foreground`: warm off-white, text on primary
+- `--background`: warm cream (`oklch(0.98 0.012 75)`)
+- `--foreground`: warm espresso-brown near-black (`oklch(0.23 0.03 45)`)
+- `--secondary` / `--muted`: warm sand, subtle backgrounds / dividers
+- `--muted-foreground`: warm gray-brown secondary text
+- `--accent`: gold (`oklch(0.72 0.12 80)`) — badges (New/Trending), highlights
+- `--destructive`: warm red, errors/remove actions
+- `--success`: earthy green, order confirmed / in-stock
+- `--border`: warm hairline (`oklch(0.9 0.02 65)`)
 
-Keep contrast AA-compliant. Reserve a strong accent for "Sale"/"COD available" badges.
+The hero and promo banner use a deeper espresso-brown (`#241B14`) with terracotta/gold
+gradient accents as a bolder statement treatment layered on top of these tokens.
+Keep contrast AA-compliant — verified via preview for body text and buttons.
 
 ## Typography
 - One clean, highly legible sans-serif for UI (e.g. Inter). Confirm it renders Bangla

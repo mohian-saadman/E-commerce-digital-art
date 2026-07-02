@@ -5,27 +5,28 @@
 >
 > Legend: `[ ]` not started · `[~]` in progress · `[x]` done · `[!]` blocked / needs owner
 
-**Current phase:** Phase 0 — Setup & Foundation
-**Last updated:** (add date on each edit)
+**Current phase:** Phase 1 — Homepage / Storefront Shell
+**Last updated:** 2026-07-02
 
 ---
 
 ## Phase 0 — Setup & Foundation
-- [ ] Confirm tooling installed (Node 18+, Git, Claude Code, GitHub auth)
-- [ ] Create repo and push empty scaffold as first commit
-- [ ] Read all `/context` files, confirm stack decisions with owner
-- [ ] Scaffold Next.js + TypeScript + Tailwind project
-- [ ] Add shadcn/ui, set up base theme tokens (see design system)
-- [ ] Set up `.env.example`, `.gitignore`, project README
-- [ ] Connect repo to Vercel, get a live preview URL for `main`
+- [x] Confirm tooling installed (Node 18+, Git, Claude Code, GitHub auth)
+- [x] Create repo and push empty scaffold as first commit
+- [x] Read all `/context` files, confirm stack decisions with owner
+- [x] Scaffold Next.js + TypeScript + Tailwind project
+- [x] Add shadcn/ui, set up base theme tokens (see design system)
+- [x] Set up `.env.example`, `.gitignore`, project README
+- [ ] Connect repo to Vercel, get a live preview URL for `main` — **needs owner** (Vercel account)
 
 ## Phase 1 — Homepage / Storefront Shell (first visible milestone)
-- [ ] Global layout: header/navbar (logo, search, cart, account), footer
-- [ ] Homepage: hero, featured products grid, category strip, promo banner
-- [ ] Responsive + mobile-first pass (85% of BD traffic is mobile)
-- [ ] Placeholder product data (JSON) so the page looks real
-- [ ] Loading/empty states, basic accessibility pass
-- [ ] **Tag release `v0.1` — homepage live on Vercel**
+- [x] Global layout: header/navbar (logo, search, cart, account), footer
+- [x] Homepage: hero, featured products grid, category strip, promo banner
+- [x] Responsive + mobile-first pass (85% of BD traffic is mobile)
+- [x] Placeholder product data (JSON) so the page looks real
+- [ ] Loading/empty states, basic accessibility pass — aria-labels/focus states in place;
+      loading/empty states apply once real async data lands in Phase 2
+- [ ] **Tag release `v0.1` — homepage live on Vercel** — blocked on Vercel connection above
 
 ## Phase 2 — Catalog
 - [ ] Product data model in Postgres via Prisma (see 06-data-model.md)
@@ -82,7 +83,13 @@
 ## Status Log
 > Newest entries at the top. Format: `YYYY-MM-DD — what changed — any decision needed`
 
-- (empty — first entry goes here)
+- 2026-07-02 — Migrated repo from the initial Vite+React+JS scaffold to Next.js (App
+  Router) + TypeScript + Tailwind + shadcn/ui per `context/01-tech-stack.md`. Built the
+  Phase 1 homepage (navbar, hero, category strip, featured products grid with placeholder
+  BDT-priced catalog, promo banner, footer), fully responsive, warm terracotta/gold brand
+  palette. Verified locally (dev server, prod build, typecheck, lint all clean). Work is
+  on branch `chore/nextjs-migration`, not yet merged to `main`. No decision needed —
+  Vercel connection (Phase 0 last item) needs the owner's Vercel account.
 
 ## Open Questions for Owner
 > Things the agent needs a human decision on. Clear them as they're answered.
@@ -90,3 +97,5 @@
 - Store name / brand? - ArtHub 
 - Product category to launch with (fashion, electronics, groceries…)? - Digital Arts(AI generated aesthetic images in Hi-res)
 - Which courier account will you open first (Steadfast is the common SME default)? - i will go with the default
+- Brand personality/colors? - Warm & local premium (terracotta + gold), decided 2026-07-02
+- Connect the GitHub repo to a Vercel account for live preview/deploy — owner action needed
