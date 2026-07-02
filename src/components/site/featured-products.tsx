@@ -1,17 +1,20 @@
-import { Plus } from "lucide-react"
+import Link from "next/link"
 
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
-import { formatBDT, products } from "@/lib/placeholder-products"
+import { ProductCard } from "@/components/site/product-card"
+import { prisma } from "@/lib/prisma"
 
-const badgeVariant: Record<string, string> = {
-  New: "bg-accent text-accent-foreground",
-  Trending: "bg-primary text-primary-foreground",
-  Limited: "bg-foreground text-background",
-  "Sold out": "bg-muted text-muted-foreground",
-}
+export async function FeaturedProducts() {
+  const products = await prisma.product.findMany({
+    where: { status: "active" },
+    orderBy: { createdAt: "desc" },
+    take: 8,
+    include: {
+      category: true,
+      images: { orderBy: { sortOrder: "asc" }, take: 1 },
+      variants: { select: { stock: true } },
+    },
+  })
 
-export function FeaturedProducts() {
   return (
     <section id="featured" className="bg-muted/40 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -25,47 +28,17 @@ export function FeaturedProducts() {
               Bangladesh.
             </p>
           </div>
-          <a
-            href="#"
+          <Link
+            href="/products"
             className="text-sm font-semibold text-primary transition hover:text-primary/80"
           >
             View all &rarr;
-          </a>
+          </Link>
         </div>
 
         <div className="mt-10 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
           {products.map((product) => (
-            <Card key={product.slug} className="group gap-0 py-0 ring-border">
-              <div
-                className={`relative aspect-square rounded-t-xl bg-gradient-to-br ${product.gradient}`}
-              >
-                {product.badge && (
-                  <Badge
-                    className={`absolute left-3 top-3 border-none ${badgeVariant[product.badge]}`}
-                  >
-                    {product.badge}
-                  </Badge>
-                )}
-                <button
-                  type="button"
-                  aria-label={`Add ${product.name} to cart`}
-                  className="absolute bottom-3 right-3 flex size-10 items-center justify-center rounded-full bg-background text-foreground opacity-0 shadow-lg ring-1 ring-border transition [transition:opacity_150ms] group-hover:opacity-100 hover:bg-muted focus-visible:opacity-100"
-                >
-                  <Plus className="size-5" />
-                </button>
-              </div>
-              <CardContent className="px-4 py-4">
-                <h3 className="font-semibold text-foreground">
-                  {product.name}
-                </h3>
-                <p className="mt-0.5 text-sm capitalize text-muted-foreground">
-                  {product.categorySlug.replace("-", " ")}
-                </p>
-                <p className="mt-3 font-semibold text-foreground">
-                  {formatBDT(product.basePrice)}
-                </p>
-              </CardContent>
-            </Card>
+            <ProductCard key={product.slug} product={product} />
           ))}
         </div>
       </div>
