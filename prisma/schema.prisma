@@ -1,0 +1,74 @@
+// Prisma schema — catalog entities for Phase 2 (context/06-data-model.md).
+// Money is stored in poisha (int): ৳1 = 100. Format to ৳ only at display time.
+// Customer/Order/Cart/Payment/Shipment entities land in their own phases (3-6).
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ProductStatus {
+  draft
+  active
+  archived
+}
+
+model Category {
+  id        String     @id @default(cuid())
+  slug      String     @unique
+  name      String
+  parentId  String?
+  parent    Category?  @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children  Category[] @relation("CategoryToCategory")
+  sortOrder Int        @default(0)
+  products  Product[]
+
+  @@index([parentId])
+}
+
+model Product {
+  id          String          @id @default(cuid())
+  slug        String          @unique
+  name        String
+  description String
+  basePrice   Int
+  currency    String          @default("BDT")
+  status      ProductStatus   @default(active)
+  categoryId  String
+  category    Category        @relation(fields: [categoryId], references: [id])
+  images      ProductImage[]
+  variants    ProductVariant[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([categoryId])
+  @@index([status])
+}
+
+model ProductVariant {
+  id         String   @id @default(cuid())
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name       String
+  sku        String   @unique
+  price      Int?
+  stock      Int      @default(0)
+  attributes Json?
+
+  @@index([productId])
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String
+  sortOrder Int     @default(0)
+
+  @@index([productId])
+}
