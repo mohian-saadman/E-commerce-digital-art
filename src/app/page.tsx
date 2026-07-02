@@ -5,6 +5,8 @@ import { Hero } from "@/components/site/hero"
 import { Navbar } from "@/components/site/navbar"
 import { PromoBanner } from "@/components/site/promo-banner"
 
+export const revalidate = 60
+
 export default function Home() {
   return (
     <>

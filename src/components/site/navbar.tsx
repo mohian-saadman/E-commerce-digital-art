@@ -1,10 +1,12 @@
 "use client"
 
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { Menu, Search, ShoppingCart, User } from "lucide-react"
+import { Menu, Search, ShoppingCart, User, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
   Sheet,
   SheetContent,
@@ -13,13 +15,22 @@ import {
 } from "@/components/ui/sheet"
 
 const links = [
-  { href: "#featured", label: "Explore" },
-  { href: "#categories", label: "Categories" },
+  { href: "/products", label: "Explore" },
+  { href: "/#categories", label: "Categories" },
   { href: "#", label: "Artists" },
 ]
 
 export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
   const [open, setOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const router = useRouter()
+
+  function submitSearch(formData: FormData) {
+    const q = String(formData.get("q") ?? "").trim()
+    setSearchOpen(false)
+    setOpen(false)
+    router.push(q ? `/products?q=${encodeURIComponent(q)}` : "/products")
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/80 bg-background/85 backdrop-blur-md">
@@ -33,27 +44,53 @@ export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
           </span>
         </Link>
 
-        <div className="hidden items-center gap-8 md:flex">
-          {links.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
+        {searchOpen ? (
+          <form
+            action={submitSearch}
+            className="flex flex-1 items-center gap-2"
+          >
+            <Input
+              name="q"
+              autoFocus
+              placeholder="Search prints, categories…"
+              className="h-10"
+            />
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              aria-label="Close search"
+              onClick={() => setSearchOpen(false)}
             >
-              {link.label}
-            </a>
-          ))}
-        </div>
+              <X className="size-5" />
+            </Button>
+          </form>
+        ) : (
+          <div className="hidden items-center gap-8 md:flex">
+            {links.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className="text-sm font-medium text-muted-foreground transition hover:text-foreground"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        )}
 
         <div className="flex items-center gap-1 sm:gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label="Search"
-            className="hidden sm:inline-flex"
-          >
-            <Search className="size-5" />
-          </Button>
+          {!searchOpen && (
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Search"
+              className="hidden sm:inline-flex"
+              onClick={() => setSearchOpen(true)}
+            >
+              <Search className="size-5" />
+            </Button>
+          )}
 
           <Button variant="ghost" size="icon" aria-label="Account" className="hidden sm:inline-flex">
             <User className="size-5" />
@@ -87,18 +124,27 @@ export function Navbar({ cartCount = 0 }: { cartCount?: number }) {
           <SheetHeader>
             <SheetTitle>ArtHub</SheetTitle>
           </SheetHeader>
-          <div className="flex flex-col gap-1 px-4">
-            {links.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-3 text-base font-medium text-foreground transition hover:bg-muted"
-              >
-                {link.label}
-              </a>
-            ))}
-            <Button className="mt-3">Sign in</Button>
+          <div className="flex flex-col gap-4 px-4">
+            <form action={submitSearch} className="flex items-center gap-2">
+              <Input name="q" placeholder="Search prints, categories…" className="h-10" />
+              <Button type="submit" variant="ghost" size="icon" aria-label="Submit search">
+                <Search className="size-5" />
+              </Button>
+            </form>
+
+            <div className="flex flex-col gap-1">
+              {links.map((link) => (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  onClick={() => setOpen(false)}
+                  className="rounded-lg px-3 py-3 text-base font-medium text-foreground transition hover:bg-muted"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </div>
+            <Button>Sign in</Button>
           </div>
         </SheetContent>
       </Sheet>

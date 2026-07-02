@@ -5,7 +5,7 @@
 >
 > Legend: `[ ]` not started · `[~]` in progress · `[x]` done · `[!]` blocked / needs owner
 
-**Current phase:** Phase 1 — Homepage / Storefront Shell
+**Current phase:** Phase 2 — Catalog
 **Last updated:** 2026-07-02
 
 ---
@@ -24,16 +24,20 @@
 - [x] Homepage: hero, featured products grid, category strip, promo banner
 - [x] Responsive + mobile-first pass (85% of BD traffic is mobile)
 - [x] Placeholder product data (JSON) so the page looks real
-- [ ] Loading/empty states, basic accessibility pass — aria-labels/focus states in place;
-      loading/empty states apply once real async data lands in Phase 2
+- [x] Loading/empty states, basic accessibility pass — loading.tsx skeletons on
+      /products and /products/[slug], empty state on zero search/filter results
 - [ ] **Tag release `v0.1` — homepage live on Vercel** — blocked on Vercel connection above
 
 ## Phase 2 — Catalog
-- [ ] Product data model in Postgres via Prisma (see 06-data-model.md)
-- [ ] Product listing page (category + filters + sort)
-- [ ] Product detail page (images, price in ৳, variants, add-to-cart)
-- [ ] Search
-- [ ] Seed script with realistic sample catalog
+- [x] Product data model in Postgres via Prisma (see 06-data-model.md) — Category,
+      Product, ProductVariant, ProductImage; Customer/Order/Cart etc. deferred to their
+      own phases per the data model doc
+- [x] Product listing page (category + filters + sort) — `/products`, pagination too
+- [x] Product detail page (images, price in ৳, variants, add-to-cart) — `/products/[slug]`;
+      the add-to-cart button is UI-only until Phase 3 wires a real cart
+- [x] Search — name/description full-text match, wired to navbar search
+- [x] Seed script with realistic sample catalog — `prisma/seed.ts`, 6 categories,
+      8 products, 2 size variants each, run via `npx prisma db seed`
 
 ## Phase 3 — Cart & Checkout
 - [ ] Cart (add/update/remove, persists across sessions)
@@ -83,13 +87,25 @@
 ## Status Log
 > Newest entries at the top. Format: `YYYY-MM-DD — what changed — any decision needed`
 
+- 2026-07-02 — Completed Phase 2 (Catalog). Added Prisma + Postgres (Category, Product,
+  ProductVariant, ProductImage models), a seed script with a realistic 6-category/
+  8-product AI-art print catalog, and built `/products` (category filter, price sort,
+  pagination, search) and `/products/[slug]` (variant selector, stock, quantity, related
+  products) — all server-rendered from the DB. Homepage's category strip and featured
+  grid now read from Postgres too (replacing the Phase 1 static placeholder file, which
+  was deleted). Added loading skeletons + empty states, closing out the last open Phase 1
+  item. Used a **local Homebrew Postgres DB** (`arthub_dev`) for development since no
+  Neon/Supabase account is connected yet — connection string lives in `.env` (gitignored,
+  not `.env.local`, to match Prisma CLI's default `dotenv` loading). Verified everything
+  in the browser preview (filters, search, variant switching, 404s) plus typecheck/lint/
+  build. Work is on branch `feat/catalog-data-model`, not yet merged. Decision needed:
+  which managed Postgres to provision for production (see Open Questions).
 - 2026-07-02 — Migrated repo from the initial Vite+React+JS scaffold to Next.js (App
   Router) + TypeScript + Tailwind + shadcn/ui per `context/01-tech-stack.md`. Built the
   Phase 1 homepage (navbar, hero, category strip, featured products grid with placeholder
   BDT-priced catalog, promo banner, footer), fully responsive, warm terracotta/gold brand
-  palette. Verified locally (dev server, prod build, typecheck, lint all clean). Work is
-  on branch `chore/nextjs-migration`, not yet merged to `main`. No decision needed —
-  Vercel connection (Phase 0 last item) needs the owner's Vercel account.
+  palette. Verified locally (dev server, prod build, typecheck, lint all clean). Merged
+  to `main` via PR #1 shortly after this entry was written.
 
 ## Open Questions for Owner
 > Things the agent needs a human decision on. Clear them as they're answered.
@@ -99,3 +115,5 @@
 - Which courier account will you open first (Steadfast is the common SME default)? - i will go with the default
 - Brand personality/colors? - Warm & local premium (terracotta + gold), decided 2026-07-02
 - Connect the GitHub repo to a Vercel account for live preview/deploy — owner action needed
+- Which managed Postgres for production — Neon or Supabase (context/01-tech-stack.md lists
+  either)? Dev has been using a local Homebrew Postgres DB in the meantime.
