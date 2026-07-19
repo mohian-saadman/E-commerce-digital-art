@@ -1,42 +1,57 @@
 # 00 — Project Overview
 
 ## Vision
-A custom-built, professionally run e-commerce store for the Bangladesh market — owned
-end to end (code, data, brand), not rented on a SaaS platform. Built iteratively with
-Claude Code, versioned on GitHub, deployed live, and improved release by release.
+A free wallpaper download site for a global, mostly-teenage audience — anime, cyberpunk,
+and adjacent aesthetics, in high resolution. Browsing is completely open; logging in with
+Google is only required to actually download (or like) a wallpaper. Built iteratively
+with Claude Code, versioned on GitHub, deployed live, improved release by release.
 
-## Why custom (and not just Shopify)
-Shopify is faster to launch but takes a monthly fee + transaction cut, does not natively
-support bKash/Nagad, and limits deep customization. A custom Next.js build means: full
-ownership, no platform transaction fees, native local payment/courier integrations, and
-freedom to shape the exact experience. The tradeoff is that we build things Shopify gives
-for free — so we phase the work carefully (see the roadmap).
+> **Pivot note (2026-07-04):** this project started as a Bangladesh-market e-commerce
+> store selling AI-generated art prints (COD, SSLCommerz, courier shipping). That
+> direction is retired — see `progress-tracker.md`'s status log for the pivot entry. This
+> file describes the *current* product.
 
-## Market context (Bangladesh, 2026)
-These facts shape almost every product decision. Sources: industry reporting, early 2026.
+## Why this shape (free + login-gated, not a store)
+No payment integration, no cart, no checkout. The funnel is: browse → find a wallpaper →
+sign in with Google → download. This keeps the product simple to build and use, and
+suits the audience — teenagers are far more likely to complete a one-tap Google sign-in
+than a purchase flow. Monetization (if any, e.g. ads) is a later, separate decision and
+does not shape the core architecture.
 
-- **Market size:** Bangladesh crossed ~$4B in B2C e-commerce in early 2026, growing ~22%/yr.
-- **Mobile-first:** ~85% of e-commerce traffic is on mobile. Design for a mid-range
-  Android on a 6-inch screen *first*, desktop second.
-- **Payments are unusual:** Extremely high mobile-money adoption (bKash, Nagad) — yet
-  most online purchases still complete as **Cash on Delivery (60–70% of orders)**. The
-  opportunity is nudging customers toward digital payment at checkout.
-- **COD is a double-edged sword:** It drives conversion but carries **20–30% return-to-
-  origin (RTO)**, which destroys margins. Mitigation is a core feature, not an afterthought
-  (phone verification + optional deposit). See `04-payments-bangladesh.md`.
-- **Logistics reality:** Dhaka has dense courier coverage and same/next-day delivery.
-  Outside Dhaka: 3–7 days and higher failed-delivery rates. **Launch Dhaka-only**, expand
-  later as a separate business line. See `05-shipping-logistics.md`.
-- **No marketplace monopoly:** Daraz is largest but <30% share, so a direct-to-consumer
-  store has real room to acquire customers.
-- **Currency:** Everything in BDT (৳). Never show prices in USD — it kills conversion.
+## Why a database is still needed
+There's no commerce, but there *is* state that has to persist server-side:
+- Who's logged in (sessions), so downloads/likes can be gated
+- Likes (which user liked which wallpaper — and to stop double-counting)
+- Download counts (to power "Most Downloaded" sorting)
+
+A folder of image files alone can't do any of that — see `06-data-model.md`.
+
+## Growth strategy: organic discovery, not social promotion
+The explicit goal is traffic through Google search and AI answer engines (ChatGPT
+browsing, Perplexity, Google AI Overviews) rather than manual social-media posting. This
+is achievable but not instant or guaranteed — it comes from technical SEO fundamentals
+done consistently: fast pages, correct metadata and structured data on every wallpaper
+page, a sitemap, genuinely unique per-wallpaper content (title/description/tags), and
+time (new domains typically take months to rank). There is no separate trick for "AI
+recommends you" beyond the same crawlable, well-structured, high-quality content — AI
+answer engines largely surface what's already well-indexed. See `07-roadmap.md` for when
+this gets built out, and treat any claim of guaranteed ranking or "AI recommendation" as
+false — the agent should never promise outcomes here, only sound execution of the
+fundamentals.
+
+## Who the audience is
+Teenagers, globally, looking for anime/cyberpunk/gaming-style wallpapers in high
+resolution for their phone or desktop. Design and copy should read as current and
+visually confident (dark, neon, motion-friendly) rather than corporate.
 
 ## Who the owner is (for the agent)
-A solo builder using Claude Code Pro, learning as the project grows. Favor clear
+A solo builder using Claude Code Pro, learning as the project grows — including how
+databases/auth work, so explain non-obvious decisions in plain language. Favor clear
 explanations, incremental steps, and maintainable code. Confirm big decisions rather than
-assuming.
+assuming, especially anything destructive (schema resets) or requiring an external
+account (Google OAuth credentials, image/CDN hosting, analytics).
 
 ## Definition of success for v1.0
-A live, fast, mobile-first storefront serving Dhaka, accepting COD + at least one digital
-payment method (via SSLCommerz), with working order management and courier dispatch, and
-a clean path to keep shipping improvements version by version.
+A live, fast, dark-themed wallpaper site with a real (owner-supplied) image catalog,
+working Google login, a functioning like/download flow, and the SEO foundation (sitemap,
+structured data, metadata) in place so organic discovery can start compounding.

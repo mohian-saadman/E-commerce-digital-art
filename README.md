@@ -1,16 +1,33 @@
-# React + Vite
+# Wallpaper Site
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A free, global wallpaper download site — anime/cyberpunk-adjacent, high resolution,
+aimed at a teenage audience. Browse everything for free; sign in with Google to like or
+download.
 
-Currently, two official plugins are available:
+Built iteratively with [Claude Code](https://claude.com/claude-code). See
+[`CLAUDE.md`](CLAUDE.md) for the agent entry point, [`context/`](context) for the full
+product spec, and [`progress-tracker.md`](progress-tracker.md) for current status.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Stack
 
-## React Compiler
+Next.js (App Router) · TypeScript · Tailwind CSS · shadcn/ui · PostgreSQL · Prisma ·
+Auth.js (Google) · GSAP. Full detail in [`context/01-tech-stack.md`](context/01-tech-stack.md).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Local development
 
-## Expanding the Oxlint configuration
+```bash
+npm install
+npx prisma migrate dev
+npx prisma db seed
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+Requires a local Postgres connection string in `.env` (see `.env.example`). The app runs
+at http://localhost:3000.
+
+## Scripts
+
+- `npm run dev` — start the dev server
+- `npm run build` — production build
+- `npm run lint` — lint
+- `npx prisma studio` — browse the local database
