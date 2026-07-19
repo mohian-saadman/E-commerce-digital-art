@@ -5,8 +5,12 @@
 
 ## What this project is
 
-A custom e-commerce web application built for the **Bangladesh market**. Built and
-maintained primarily through Claude Code, versioned on GitHub, deployed on Vercel.
+A free, global wallpaper download site (anime/cyberpunk-adjacent, aimed at teenagers).
+Browsing is open; Google login is required to like or download. Built and maintained
+primarily through Claude Code, versioned on GitHub, deployed on Vercel.
+
+> Pivoted 2026-07-04 from a Bangladesh e-commerce art-print store — see
+> `progress-tracker.md`'s status log for the full pivot entry if old references turn up.
 
 The owner is a solo builder learning as they go. Explain non-obvious decisions in plain
 language. Prefer clarity and maintainability over cleverness.
@@ -28,16 +32,18 @@ language. Prefer clarity and maintainability over cleverness.
 
 ## Guardrails
 
-- **Never commit secrets.** API keys, payment credentials, and `.env*` files must be
+- **Never commit secrets.** API keys, OAuth credentials, and `.env*` files must be
   git-ignored. Use `.env.example` with placeholder values as documentation.
-- **Never invent payment or courier API behaviour.** If unsure how SSLCommerz, bKash,
-  Steadfast, or Pathao work, say so and ask the owner to confirm from official docs
-  rather than guessing endpoints or field names.
-- **Bangladesh-first defaults.** Prices in BDT (৳). Mobile-first layouts. COD as a
-  first-class payment method. See `context/04-payments-bangladesh.md` and
-  `context/05-shipping-logistics.md`.
+- **Never invent Google OAuth credentials or wallpaper image files.** Both come from the
+  owner — ask rather than fabricating a placeholder that looks real.
+- **No payment integration.** The product is free; don't add a cart, checkout, or paid
+  tier unless the owner explicitly decides to monetize and asks for it.
+- **Never promise SEO/AI-search-recommendation outcomes.** Build the technical
+  foundation faithfully (see `context/00-project-overview.md` and
+  `context/07-roadmap.md` Phase 7); never claim a guaranteed ranking or "AI will
+  recommend this" result.
 
 ## Current stack (summary — full detail in context/01-tech-stack.md)
 
 Next.js (App Router) · TypeScript · Tailwind CSS · shadcn/ui · PostgreSQL · Prisma ·
-Auth.js · SSLCommerz + COD · Vercel + Neon.
+Auth.js (Google only) · GSAP · Vercel + Neon/Supabase.

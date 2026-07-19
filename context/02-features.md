@@ -1,52 +1,52 @@
 # 02 — Features
 
-Feature spec, grouped by phase. This is *what* to build; the tracker is *whether it's done*.
-Keep features minimal per phase — ship, learn, iterate.
+Feature spec, grouped by phase (see `07-roadmap.md`). This is *what* to build; the
+tracker is *whether it's done*. Keep features minimal per phase — ship, learn, iterate.
 
-## Core storefront (Phase 1–3)
-- **Navbar:** logo, search, cart icon with count, account menu. Sticky on scroll.
-- **Homepage:** hero with CTA, featured products grid, category strip, promo banner.
-- **Product listing:** grid with category filter, price sort, pagination.
-- **Product detail:** image gallery, title, price in ৳, variants (size/color), stock
-  status, quantity selector, add-to-cart, description, related products.
-- **Search:** by product name/category.
-- **Cart:** add/update/remove, line totals, subtotal, persists across sessions.
-- **Checkout:** mobile-first, minimal fields. Guest checkout allowed. Address
-  (division → district → thana), phone (required, verified), delivery notes.
+## Core browsing (Phase 4-5)
+- **Navbar:** logo, search, sign-in (Google) / account menu. Sticky on scroll.
+- **Homepage:** hero, category strip, "Most Downloaded" / "Most Liked" grid, CTA banner
+  to sign in for downloads.
+- **Wallpaper listing** (`/wallpapers`): grid with category filter, tag filter, sort
+  (Newest / Most Liked / Most Downloaded), pagination.
+- **Wallpaper detail** (`/wallpapers/[slug]`): large preview, title, description, tags,
+  resolution picker (Mobile/HD/2K/4K), like button, download button per resolution,
+  related wallpapers (same category).
+- **Search:** by title/description/tags.
 
-## Payments (Phase 4) — see 04-payments-bangladesh.md
-- Cash on Delivery (default, most-used).
-- **Phone/OTP verification before confirming COD orders** — reduces fake orders/RTO.
-- SSLCommerz hosted checkout (bKash, Nagad, cards) — one integration.
-- Clear success / failure / cancelled states + server-side payment verification.
-- (Optional) small bKash deposit on COD to filter fake orders.
+## Accounts & gating (Phase 2 & 5)
+- **Google sign-in only** (Auth.js + `@auth/prisma-adapter`) — no email/password.
+- **Liking a wallpaper requires login.** Logged-out users get prompted to sign in;
+  liking is idempotent per user (toggle on/off), one Like row per (user, wallpaper).
+- **Downloading requires login.** The download button/link goes through a small
+  server-side check: not logged in → redirect to sign-in; logged in → record a Download
+  row, then serve the file.
+- No admin role needed yet — the owner manages inventory directly via `prisma/seed.ts`
+  until/unless an admin UI is worth building later.
 
-## Orders & accounts (Phase 5)
-- Customer accounts: order history, saved addresses.
-- Admin role + dashboard: manage orders, products, inventory, view basic sales.
-- Order lifecycle statuses: `new → processing → dispatched → delivered → returned/cancelled`.
-- Order confirmation + status updates via SMS/email.
+## Motion & interaction (Phase 6)
+- GSAP-driven scroll reveals on homepage sections, hover parallax/tilt on wallpaper
+  cards, hero entrance animation.
+- Always respect `prefers-reduced-motion` — motion is a delight layer, not load-bearing.
 
-## Shipping (Phase 6) — see 05-shipping-logistics.md
-- Shipping zones + rates (Dhaka inside, Dhaka outside, nationwide).
-- Auto-create courier parcel on dispatch (Steadfast, then Pathao for Dhaka).
-- Customer order tracking page.
+## SEO foundation (Phase 7)
+- Per-route `generateMetadata` (title/description/OG image using the wallpaper's own
+  thumbnail).
+- JSON-LD structured data (`ImageObject`/`CreativeWork`) on every wallpaper detail page.
+- `sitemap.ts` enumerating every wallpaper + category page; `robots.txt`.
+- No separate "AI search" feature — the same structured, indexable content serves both
+  Google and AI answer engines. See `00-project-overview.md`'s growth-strategy note on
+  why this can't be promised as fast or guaranteed.
 
-## Trust & conversion (woven throughout)
-- Fast mobile load; large tap targets; minimal-friction checkout.
-- Reviews/ratings (Phase 8) for social proof.
-- Clear return/refund policy page.
-- WhatsApp / phone contact button — common and expected in BD.
-
-## Growth backlog (Phase 8+)
-- Courier RTO/fraud phone-check before shipping.
-- Discount codes / campaigns.
-- Wishlist.
-- bKash direct integration (cheaper than aggregator).
-- Nationwide expansion (separate pricing + delivery-time expectations).
+## Growth backlog (later, no fixed order)
+- Trending/curated collections beyond raw "most downloaded".
+- User collections/favorites list (distinct from the like count).
+- Tag-based recommendations ("more like this").
+- Monetization (ads or a premium tier) — **only if the owner explicitly decides to**; not
+  assumed or default.
 
 ## Non-goals (for now)
-- Multi-vendor marketplace.
-- Subscriptions / recurring billing.
-- Multi-currency / international shipping.
+- Any payment integration, cart, or checkout.
+- Multi-vendor / user-uploaded content — the owner supplies all wallpapers.
 - Native mobile apps (the responsive web is the priority).
+- Email/password accounts.
